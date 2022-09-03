@@ -1,0 +1,160 @@
+units:
+  # Helpers
+  # edgespace: 5
+  # half_edgespace: 2.5
+
+  # constants
+  mx_plate_thickness: 1.5
+  choc_plate_thickness: 1.2
+
+  # not using choc yet, but defined for future ref
+  choc_cap_x: 17.5
+  choc_cap_y: 16.5
+
+
+points:
+  # each key across all zones will have these properties
+  key:
+    bind: 0
+    footprints:
+      mx_hotswap:
+        type: mx
+        nets:
+          from: =column_net
+          to: GND
+        params:
+          hotswap: true
+          
+      mx:
+        type: mx
+        anchor:
+          rotate: 180
+        nets:
+          from: =column_net
+          to: GND
+        params:
+          keycaps: true
+          hotswap: false
+  zones:
+    cycle:
+      columns: 
+        start:
+          key:
+            column_net: P2
+        stop:
+          key:
+            column_net: P0
+        hold:
+          key:
+            column_net: P1
+    speed:
+      anchor:
+        shift: [0,-50]
+        rotate: 0 
+      columns:
+        C1:
+      rows:
+        R2:
+          shift: [0,-5]
+          column_net: P4
+        R1:
+          column_net: P3
+    ArrowCluster:
+      anchor:
+        shift: [36,-55]
+      rows: 
+        R1:
+        R2:
+      columns:
+        C3:
+          rows:
+            R2: {skip: true}
+            R1: {column_net: P5}
+        C4:
+          rows:
+            R1: {column_net: P6}
+            R2: {column_net: P7}
+        C5:
+          rows:
+            R2: {skip: true}
+            R1: {column_net: P8}
+    ZAxis:
+      anchor: 
+        shift: [90,-19]
+      rows:
+        R4: {column_net: P20}
+        R3: {column_net: P21}
+      columns:
+        C6: 
+
+    Coolant:
+      anchor:
+        shift: [108 , -55]
+      columns:
+        C7:
+      rows:
+        R1: {column_net: P10}
+
+outlines:
+  exports:
+    raw:
+      - type: keys
+        side: both
+        size: [U,U]
+      - type: rectangle
+        size: [126 + 5  , 74 + 5 ]
+        anchor:  
+          shift: [-U/2+0.5 - 2.5,-64 - 2.5]  
+    board_cutout:
+      - type: outline
+        name: raw 
+        fillet: 2 
+    _switch_cutouts:
+      - type: keys
+        side: both
+        size: 14 #plate cutouts are 14mmx14mm for both MX and choc
+        bound: false      
+    switchplate: 
+      [board_cutout, -_switch_cutouts ]
+
+    _keycap_outlines:
+      - type: keys
+        size: [u-0.5,u-0.5]
+        side: both 
+        bound: false
+    preview: 
+      [board_cutout , -_keycap_outlines]
+
+pcbs:
+  e5c_mill:
+    outlines:
+      board: 
+        outline: board_cutout
+      keycaps:
+        outline: preview
+        layer: Eco1.User
+    footprints:
+      nicenano: 
+        type: promicro
+        params:
+        # place MCU underneath board at Z-Axis
+          orientation: up
+        anchor:
+          rotate: -90
+          shift: [64, -6]
+      pcm12:
+        type: pcm12
+        params:
+        anchor:
+          rotate: 180
+          shift: [112,10]
+        nets:
+          from: pos  
+          to: RAW
+      bat:
+        type: bat
+        nets: 
+          neg: GND
+        anchor:
+          shift: [77,6]
+          rotate: 0
