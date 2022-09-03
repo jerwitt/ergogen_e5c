@@ -125,6 +125,16 @@ outlines:
     preview: 
       [board_cutout , -_keycap_outlines]
 
+cases:  
+  switchplate: 
+    - type: outline
+      name: switchplate
+      extrude: mx_plate_thickness
+  bottom:
+    - type: outline
+      name: board_cutout  
+      extrude: mx_plate_thickness
+
 pcbs:
   e5c_mill:
     outlines:
